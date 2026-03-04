@@ -23,10 +23,10 @@
  along with Archibp. If not, see <http://www.gnu.org/licenses/>.
  --------------------------------------------------------------------------
  */
+global $DB;
 
 if (strpos($_SERVER['PHP_SELF'],"dropdownTypeArchibp.php")) {
    $AJAX_INCLUDE=1;
-   include ('../../../inc/includes.php');
    header("Content-Type: text/html; charset=UTF-8");
    Html::header_nocache();
 }
@@ -39,12 +39,11 @@ if (isset($_POST["tasktype"])) {
 
    // Clean used array
    if (isset($_POST['used']) && is_array($_POST['used']) && (count($_POST['used']) > 0)) {
-      $query = "SELECT `id`
-                FROM `glpi_plugin_archibp_tasks`
-                WHERE `id` IN (".implode(',',$_POST['used']).")
-                      AND `plugin_archibp_tasktypes_id` = '".$_POST["tasktype"]."'";
 
-      foreach ($DB->request($query) AS $data) {
+      foreach ($DB->request(['SELECT'=> 'id',
+                              'FROM' => 'glpi_plugin_archibp_tasks',
+                              'WHERE' => ['id' => ['IN', $_POST['used']],
+                                          'plugin_archibp_tasktypes_id' => $_POST["tasktype"]]]) AS $data) {
          $used[$data['id']] = $data['id'];
       }
    }

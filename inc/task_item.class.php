@@ -153,7 +153,7 @@ class PluginArchibpTask_Item extends CommonDBRelation {
          "WHERE `plugin_archibp_tasks_id` = '" . $plugin_archibp_tasks_id . "'
          AND `itemtype` = '" . $items_id . "'
          AND `items_id` = '" . $itemtype . "'";
-      if ($result = $DB->query($query)) {
+      if ($result = $DB->doQuery($query)) {
          if ($DB->numrows($result) != 1) {
             return false;
          }
@@ -216,7 +216,7 @@ class PluginArchibpTask_Item extends CommonDBRelation {
              ORDER BY `itemtype`
              LIMIT ".count(PluginArchibpTask::getTypes(true));
 
-      $result = $DB->query($query);
+      $result = $DB->doQuery($query);
       $number = $DB->numrows($result);
 
       if (Session::isMultiEntitiesMode()) {
@@ -302,7 +302,7 @@ class PluginArchibpTask_Item extends CommonDBRelation {
             }
             $query.=" ORDER BY `glpi_entities`.`completename`, `".$itemTable."`.`$column`";
 
-            if ($result_linked=$DB->query($query)) {
+            if ($result_linked=$DB->doQuery($query)) {
                if ($DB->numrows($result_linked)) {
 
                   Session::initNavigateListItems($itemType,PluginArchibpTask::getTypeName(2)." = ".$task->fields['name']);
@@ -403,7 +403,7 @@ class PluginArchibpTask_Item extends CommonDBRelation {
 
       $query .= " ORDER BY `assocName`";
 
-      $result = $DB->query($query);
+      $result = $DB->doQuery($query);
       $number = $DB->numrows($result);
       $i      = 0;
 
@@ -440,7 +440,7 @@ class PluginArchibpTask_Item extends CommonDBRelation {
                WHERE `is_deleted` = '0'
                $limit";
 
-         $result = $DB->query($q);
+         $result = $DB->doQuery($q);
          $nb     = $DB->result($result,0,0);
 
          echo "<div class='firstbloc'>";
@@ -492,8 +492,8 @@ class PluginArchibpTask_Item extends CommonDBRelation {
       if (Session::isMultiEntitiesMode()) {
          echo "<th>".__('Entity')."</th>";
       }
-      echo "<th>".PluginArchibpTasktype::getTypeName(1)."</th>";
-      echo "<th>".PluginArchibpCriticity::getTypeName(1)."</th>";
+      echo "<th>".__('Task type')."</th>";
+      echo "<th>".__('Criticity')."</th>";
       echo "<th>".__('Business Process Structure')."</th>";
 //      echo "<th>".__('Editor', 'archibp')."</th>";
       echo "</tr>";

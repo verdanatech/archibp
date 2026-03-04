@@ -186,7 +186,7 @@ class PluginArchibpProfile extends Profile {
    * Migration rights from old system to the new one for one profile
    * @param $profiles_id the profile ID
    */
-   static function migrateOneProfile($profiles_id) {
+/*   static function migrateOneProfile($profiles_id) {
       global $DB;
       //Cannot launch migration if there's nothing to migrate...
       if (!$DB->TableExists('glpi_plugin_archibp_profiles')) {
@@ -204,12 +204,12 @@ class PluginArchibpProfile extends Profile {
                $query = "UPDATE `glpi_profilerights`
                          SET `rights`='".self::translateARight($profile_data[$old])."'
                          WHERE `name`='$new' AND `profiles_id`='$profiles_id'";
-               $DB->query($query);
+               $DB->doQuery($query);
             }
          }
       }
    }
-
+*/
    /**
    * Initialize profiles, and migrate it necessary
    */
@@ -227,13 +227,15 @@ class PluginArchibpProfile extends Profile {
       }
 
       //Migration old rights in new ones
-      foreach ($DB->request("SELECT `id` FROM `glpi_profiles`") as $prof) {
+/*      foreach ($DB->request(['SELECT'=> 'id',
+                              'FROM' => 'glpi_profiles']
+               ) as $prof) {
          self::migrateOneProfile($prof['id']);
       }
-      foreach ($DB->request("SELECT *
-                           FROM `glpi_profilerights`
-                           WHERE `profiles_id`='".$_SESSION['glpiactiveprofile']['id']."'
-                              AND `name` LIKE '%plugin_archibp%'") as $prof) {
+*/      foreach ($DB->request(['FROM' =>  'glpi_profilerights',
+                              'WHERE' =>  ['profiles_id' => $_SESSION['glpiactiveprofile']['id'], 
+                                          'name' => ['LIKE', '%plugin_archibp%']]]
+                              ) as $prof) {
          $_SESSION['glpiactiveprofile'][$prof['name']] = $prof['rights'];
       }
    }
